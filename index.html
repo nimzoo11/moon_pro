@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Universal Character & Symbol Picker</title>
+    <!-- Google Fonts - 전 세계 문자 지원 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Color+Emoji&family=Noto+Sans+Math&family=Noto+Sans+Symbols&family=STIX+Two+Math&family=STIX+Two+Text&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans', 'Noto Sans Math', 'Noto Sans Symbols', 'STIX Two Math', 'STIX Two Text', 'Noto Sans CJK KR', 'Noto Sans CJK JP', 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Segoe UI', 'Malgun Gothic', '맑은 고딕', 'Microsoft YaHei', 'SimHei', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', 'Cambria Math', 'STIX Math', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #fce4ec 50%, #f3e5f5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: backgroundShift 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundShift {
+            0% { background: linear-gradient(135deg, #e3f2fd 0%, #fce4ec 50%, #f3e5f5 100%); }
+            50% { background: linear-gradient(135deg, #f3e5f5 0%, #e3f2fd 50%, #fce4ec 100%); }
+            100% { background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #e3f2fd 100%); }
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .character-picker {
+            width: 600px;
+            height: 700px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: floatUp 0.8s ease-out, glowPulse 3s ease-in-out infinite alternate;
+            border: 2px solid rgba(144, 202, 249, 0.3);
+        }
+
+        .tools-panel {
+            width: 500px;
+            height: 700px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: floatUp 0.8s ease-out 0.2s both, glowPulse 3s ease-in-out infinite alternate;
+            border: 2px solid rgba(240, 98, 146, 0.3);
+        }
+
+        @keyframes floatUp {
+            0% { 
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes glowPulse {
+            0% { 
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1), 0 0 20px rgba(144, 202, 249, 0.2);
+            }
+            100% { 
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 30px rgba(144, 202, 249, 0.4);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #90caf9 0%, #f48fb1 50%, #ce93d8 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            animation: headerGlow 2s ease-in-out infinite alternate;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #90caf9, #f48fb1, #ce93d8, #90caf9);
+            background-size: 200% 100%;
+            animation: gradientMove 3s ease-in-out infinite;
+        }
+
+        @keyframes headerGlow {
+            0% { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 255, 255, 0.3); }
+            100% { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.6); }
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .tab-container {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            overflow-x: auto;
+        }
+
+        .tab {
+            min-width: 85px;
+            padding: 12px 10px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 11px;
+            background: transparent;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(144, 202, 249, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .tab:hover::before {
+            left: 100%;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #90caf9 0%, #f48fb1 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(144, 202, 249, 0.3);
+            font-weight: bold;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(144, 202, 249, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .search-container {
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .content-area {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .character-grid {
+            height: 100%;
+            padding: 15px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 8px;
+            align-content: start;
+        }
+
+        .character-item {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(144, 202, 249, 0.1) 0%, rgba(240, 98, 146, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .character-item:hover::before {
+            opacity: 1;
+        }
+
+        .character-item:hover {
+            transform: scale(1.25) rotate(5deg);
+            z-index: 10;
+            border-color: rgba(144, 202, 249, 0.5);
+            box-shadow: 0 8px 25px rgba(144, 202, 249, 0.3);
+        }
+
+        .character-item:active {
+            transform: scale(1.15) rotate(2deg);
+            background: linear-gradient(135deg, rgba(144, 202, 249, 0.2) 0%, rgba(240, 98, 146, 0.2) 100%);
+        }
+
+        .category-divider {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin: 10px 0;
+            padding: 5px;
+            background: linear-gradient(90deg, transparent, #e9ecef, transparent);
+            border-radius: 10px;
+        }
+
+        .tool-section {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .tool-section.active {
+            display: flex;
+        }
+
+        .tool-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #90caf9 0%, #f48fb1 50%, #ce93d8 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(144, 202, 249, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(144, 202, 249, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .output-area {
+            background: #fff;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            font-family: 'Noto Sans CJK KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            word-break: break-all;
+            overflow-y: auto;
+        }
+
+        /* 한글 변환 결과 출력창에 NFD 최적화 스타일 적용 */
+        #koreanOutputText {
+            font-family: 'Noto Sans', 'Noto Sans Math', 'Noto Sans Symbols', 'Noto Sans CJK KR', 'Noto Sans CJK JP', 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Consolas', 'Monaco', 'Courier New', 'Cambria Math', 'STIX Math', 'Malgun Gothic', '맑은 고딕', 'Microsoft YaHei', 'SimHei', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', 'sans-serif', monospace !important;
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+            letter-spacing: 0.3px !important;
+            word-spacing: 0.1em !important;
+        }
+
+        /* Zero-Width Space가 더 명확하게 보이도록 스타일링 */
+        #koreanOutputText::before {
+            content: '';
+            display: inline-block;
+            width: 0;
+            height: 0;
+        }
+
+        /* 일반 한글을 파란색으로 구분하는 스타일 */
+        .korean-regular {
+            color: #007AFF !important;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* 한글 변환 결과와 유니코드 검증 결과의 복사 버튼을 하단에 위치 */
+        #koreanOutputText + .copy-btn,
+        #koreanOutputText ~ .copy-btn,
+        #unicodeVerifyOutputText + .copy-btn,
+        #unicodeVerifyOutputText ~ .copy-btn {
+            top: auto;
+            bottom: 10px;
+        }
+
+        .ascii-gallery {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .ascii-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            white-space: pre;
+            border: 2px solid transparent;
+        }
+
+        .ascii-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .copy-notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #90caf9 0%, #f48fb1 50%, #ce93d8 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 14px;
+            transform: translateX(400px) scale(0.8);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            box-shadow: 0 8px 25px rgba(144, 202, 249, 0.4);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: notificationPulse 0.6s ease-out;
+        }
+
+        @keyframes notificationPulse {
+            0% { transform: translateX(400px) scale(0.8); }
+            50% { transform: translateX(0) scale(1.1); }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        .copy-notification.show {
+            transform: translateX(0);
+        }
+
+        .character-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .character-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .character-grid::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .character-grid::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 문자 & 기호 선택기 -->
+        <div class="character-picker">
+            <div class="header">
+                🎨 부가기능은 여기로~!
+            </div>
+            
+            <div class="tab-container">
+                <button class="tab active" data-category="emoji">😀<br>이모티콘</button>
+                <button class="tab" data-category="symbols">◉<br>기호</button>
+                <button class="tab" data-category="unicodeVerify">🔍<br>변환검증하기</button>
+            </div>
+            
+            
+            <div class="content-area">
+                <div class="character-grid" id="characterGrid">
+                    <!-- 문자들이 여기에 동적으로 추가됩니다 -->
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- 도구 패널 -->
+        <div class="tools-panel" id="koreanPanel">
+            <div class="header">
+                🛠️ 문자 변환
+            </div>
+            
+            <div class="tool-content">
+                <div class="input-group">
+                    <label>⌨️ 텍스트 입력</label>
+                    <div style="position: relative;">
+                        <textarea id="koreanInput" placeholder="변환할 한글을 입력하세요..." rows="8" style="height: 200px; resize: none;"></textarea>
+                        <div id="koreanInputCounter" style="position: absolute; top: 10px; right: 10px; background: #f8f9fa; padding: 4px 8px; border-radius: 12px; font-size: 12px; color: #666;">0/70</div>
+                    </div>
+                </div>
+                <button class="btn" id="koreanBtn">변환하기</button>
+                <div class="input-group">
+                    <label><br>🔮 변환 결과</label>
+                    <div style="position: relative;">
+                        <div id="koreanOutputText" contenteditable="true" style="height: 200px; padding: 15px; border: 2px solid #e9ecef; border-radius: 12px; background: #fff; font-family: 'Noto Sans CJK KR', 'Malgun Gothic', '맑은 고딕', sans-serif; font-size: 14px; line-height: 1.4; outline: none; white-space: pre-wrap; word-break: break-all; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-y: auto; position: relative;"></div>
+                        <div id="koreanOutputCounter" style="position: absolute; top: 10px; right: 10px; background: #f8f9fa; padding: 4px 8px; border-radius: 12px; font-size: 12px; color: #666;">0/70(0/140B)</div>
+                        <button class="copy-btn" id="koreanCopyBtn" style="position: absolute; bottom: 10px; right: 10px; width: auto; min-width: 50px; height: 30px; font-size: 12px; padding: 5px 10px; z-index: 10;">복사</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 유니코드 검증 패널 -->
+        <div class="tools-panel" id="unicodeVerifyPanel" style="display: none;">
+            <div class="header">
+                🔍 유니코드 검증
+            </div>
+            
+            <div class="tool-content">
+                <div class="input-group">
+                    <label>⌨️ 검증할 텍스트</label>
+                    <div style="position: relative;">
+                        <textarea id="unicodeVerifyInput" placeholder="유니코드 구성을 검증할 텍스트를 입력하세요..." rows="8" style="height: 200px; resize: none;"></textarea>
+                        <div id="unicodeVerifyInputCounter" style="position: absolute; top: 10px; right: 10px; background: #f8f9fa; padding: 4px 8px; border-radius: 12px; font-size: 12px; color: #666;">0/70</div>
+                    </div>
+                </div>
+                <button class="btn" id="unicodeVerifyBtn">🔍 검증하기</button>
+                <div class="input-group">
+                    <label><br>🔍 유니코드 구성 검증 결과</label>
+                    <div style="position: relative;">
+                        <div id="unicodeVerifyOutputText" contenteditable="true" style="height: 200px; padding: 15px; border: 2px solid #e9ecef; border-radius: 12px; background: #fff; font-family: 'Noto Sans', 'Noto Sans Math', 'Noto Sans Symbols', 'Noto Sans CJK KR', 'Noto Sans CJK JP', 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Consolas', 'Monaco', 'Courier New', 'Cambria Math', 'STIX Math', 'Malgun Gothic', '맑은 고딕', 'Microsoft YaHei', 'SimHei', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', 'sans-serif', monospace; font-size: 13px; line-height: 1.6; outline: none; white-space: pre-wrap; word-break: break-all; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-y: auto; position: relative; letter-spacing: 0.3px; word-spacing: 0.1em;"></div>
+                        <div id="unicodeVerifyOutputCounter" style="position: absolute; top: 10px; right: 10px; background: #f8f9fa; padding: 4px 8px; border-radius: 12px; font-size: 12px; color: #666;">0/70(0/140B)</div>
+                        <button class="copy-btn" id="unicodeVerifyCopyBtn" style="position: absolute; bottom: 10px; right: 10px; width: auto; min-width: 50px; height: 30px; font-size: 12px; padding: 5px 10px; z-index: 10;">복사</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        </div>
+    </div>
+
+    <div class="copy-notification" id="copyNotification">
+        📋 복사되었습니다!
+    </div>
+
+    <script>
+        /* ========================================
+           전역 변수 - 애플리케이션 상태 관리
+        ======================================== */
+        // 현재 활성화된 문자 카테고리 (이모티콘, 기호, 수학 등)
+        let currentCategory = 'emoji';
+        // 현재 활성화된 텍스트 변환 도구 (한글분리, 글꼴변환, ASCII아트, 결합문자)
+        let currentTool = 'korean';
+
+        /* ========================================
+           문자 데이터베이스 - 카테고리별 특수문자 및 이모티콘
+        ======================================== */
+        // 각 카테고리별로 분류된 문자들의 데이터베이스
+        const characterCategories = {
+            emoji: {
+                '😀 얼굴과 감정': [
+                    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰',
+                    '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏',
+                    '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠',
+                    '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥',
+                    '🤐', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩', '👻',
+                    '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'
+                ],
+                '💖 하트와 사랑': [
+                    '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖',
+                    '💘', '💝', '💟', '💌', '💒', '💍', '💎', '👑', '💐', '🌹', '🌺', '🌸', '🌻', '🌷'
+                ],
+                '🐶 동물': [
+                    '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸',
+                    '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇',
+                    '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦟', '🦗', '🕷️', '🕸️', '🦂',
+                    '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳'
+                ],
+                '🌟 활동과 스포츠': [
+                    '⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍',
+                    '🏏', '🪃', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛼', '🛷', '⛸️', '🥌'
+                ],
+                '🎭 오브젝트와 기호': [
+                    '🎨', '🎭', '🎪', '🎫', '🎟️', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🥇', '🥈', '🥉', '🏆', '🏅',
+                    '🎖️', '🏵️', '🎗️', '🎫', '🎟️', '🎪', '🤹', '🎨', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🎙️', '📻'
+                ]
+            },
+            symbols: {
+                '◉ 기본 기호': [
+                    '•', '‣', '⁃', '◦', '▪', '▫', '▬', '◊', '○', '●', '◯', '◉', '◎', '⦿', '⊙', '⊚',
+                    '⊛', '⊜', '⊝', '⊞', '⊟', '⊠', '⊡', '⊢', '⊣', '⊤', '⊥', '⊦', '⊧', '⊨', '⊩', '⊪'
+                ],
+                '★ 별과 장식': [
+                    '★', '☆', '✦', '✧', '✩', '✪', '✫', '✬', '✭', '✮', '✯', '✰', '✱', '✲', '✳', '✴',
+                    '✵', '✶', '✷', '✸', '✹', '✺', '✻', '✼', '✽', '✾', '✿', '❀', '❁', '❂', '❃', '❇'
+                ]
+            }
+        };
+
+
+        /* ========================================
+           애플리케이션 초기화 - DOM 로드 완료 후 실행
+        ======================================== */
+        // 페이지 DOM이 완전히 로드된 후 애플리케이션 초기화 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        /**
+         * 애플리케이션 전체 초기화 함수
+         * - 모든 이벤트 리스너와 UI 컴포넌트를 설정
+         * - 초기 데이터 렌더링 수행
+         */
+        function initializeApp() {
+            setupCategoryTabs();    // 문자 카테고리 탭 설정
+            setupToolButtons();     // 도구 버튼들 이벤트 설정
+            renderCharacters();     // 초기 문자 렌더링
+        }
+
+        /* ========================================
+           이벤트 리스너 설정 함수들
+        ======================================== */
+        
+        /**
+         * 문자 카테고리 탭 클릭 이벤트 설정
+         * - 이모티콘, 기호, 수학, 화살표 등 카테고리 전환 기능
+         */
+        function setupCategoryTabs() {
+            const tabs = document.querySelectorAll('.character-picker .tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    switchCategory(category, this);
+                });
+            });
+        }
+
+
+
+        /**
+         * 텍스트 변환 도구들의 버튼 이벤트 설정
+         * - 각 도구의 실행 버튼과 복사 버튼 이벤트 연결
+         */
+        function setupToolButtons() {
+            // 한글 자모 분리 도구 이벤트
+            document.getElementById('koreanBtn').addEventListener('click', separateKorean);
+            document.getElementById('koreanCopyBtn').addEventListener('click', () => {
+                const outputText = document.getElementById('koreanOutputText');
+                if (outputText) {
+                    const text = outputText.textContent || outputText.innerText;
+                    // Zero-Width Space (U+200B) 제거 후 복사
+                    const cleanText = text.replace(/\u200B/g, '');
+                    copyToClipboard(cleanText);
+                }
+            });
+
+            // 한글 입력란 바이트 카운터 이벤트
+            document.getElementById('koreanInput').addEventListener('input', updateKoreanInputCounter);
+
+            // 유니코드 검증 도구 이벤트
+            document.getElementById('unicodeVerifyBtn').addEventListener('click', verifyUnicode);
+            document.getElementById('unicodeVerifyCopyBtn').addEventListener('click', () => {
+                const outputText = document.getElementById('unicodeVerifyOutputText');
+                if (outputText) {
+                    const text = outputText.textContent || outputText.innerText;
+                    // Zero-Width Space (U+200B) 제거 후 복사
+                    const cleanText = text.replace(/\u200B/g, '');
+                    copyToClipboard(cleanText);
+                }
+            });
+
+            // 유니코드 검증 입력란 바이트 카운터 이벤트
+            document.getElementById('unicodeVerifyInput').addEventListener('input', updateUnicodeVerifyInputCounter);
+        }
+
+        /* ========================================
+           UI 전환 함수들 - 탭 및 섹션 변경
+        ======================================== */
+        
+        /**
+         * 문자 카테고리 전환 함수
+         * @param {string} category - 전환할 카테고리 ID
+         * @param {Element} tabElement - 클릭된 탭 요소
+         */
+        function switchCategory(category, tabElement) {
+            currentCategory = category;
+            
+            // 모든 카테고리 탭의 활성화 상태 제거 후 선택된 탭만 활성화
+            document.querySelectorAll('.character-picker .tab').forEach(tab => tab.classList.remove('active'));
+            tabElement.classList.add('active');
+            
+            // 유니코드 검증 탭인 경우 우측 패널 전환
+            if (category === 'unicodeVerify') {
+                document.getElementById('koreanPanel').style.display = 'none';
+                document.getElementById('unicodeVerifyPanel').style.display = 'flex';
+            } else {
+                document.getElementById('koreanPanel').style.display = 'flex';
+                document.getElementById('unicodeVerifyPanel').style.display = 'none';
+                // 선택된 카테고리의 문자들을 다시 렌더링
+                renderCharacters();
+            }
+        }
+
+
+        /* ========================================
+           문자 렌더링 및 표시 함수들
+        ======================================== */
+        
+        /**
+         * 선택된 카테고리의 문자들을 그리드에 렌더링하는 함수
+         * - 카테고리별로 구분선과 함께 문자들을 표시
+         * - 각 문자에 클릭 이벤트 연결 (클립보드 복사)
+         */
+        function renderCharacters() {
+            const grid = document.getElementById('characterGrid');
+            grid.innerHTML = ''; // 기존 내용 초기화
+            
+            // 현재 선택된 카테고리의 데이터가 존재하는 경우
+            if (characterCategories[currentCategory]) {
+                Object.entries(characterCategories[currentCategory]).forEach(([categoryName, characters]) => {
+                    // 카테고리 구분선 생성
+                    const divider = document.createElement('div');
+                    divider.className = 'category-divider';
+                    divider.textContent = categoryName;
+                    grid.appendChild(divider);
+
+                    // 해당 카테고리의 모든 문자들을 버튼으로 생성
+                    characters.forEach(char => {
+                        const item = document.createElement('button');
+                        item.className = 'character-item';
+                        item.textContent = char;
+                        item.title = `${char} - ${categoryName}`; // 툴팁 표시
+                        item.addEventListener('click', () => copyToClipboard(char)); // 클릭시 복사
+                        grid.appendChild(item);
+                    });
+                });
+            }
+        }
+
+        /**
+         * 검색어에 따라 문자를 필터링하는 함수
+         * @param {string} searchTerm - 사용자가 입력한 검색어
+         * - 카테고리명과 문자 자체를 대상으로 검색
+         * - 검색어가 없으면 전체 문자 표시
+         */
+        function filterCharacters(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+            
+            // 검색어가 없으면 전체 문자 렌더링
+            if (term === '') {
+                renderCharacters();
+                return;
+            }
+            
+            const grid = document.getElementById('characterGrid');
+            grid.innerHTML = ''; // 기존 내용 초기화
+            
+            let found = false; // 검색 결과 존재 여부
+            
+            if (characterCategories[currentCategory]) {
+                Object.entries(characterCategories[currentCategory]).forEach(([categoryName, characters]) => {
+                    let categoryMatches = [];
+                    
+                    // 카테고리 이름에 검색어가 포함된 경우 모든 문자 표시
+                    if (categoryName.toLowerCase().includes(term)) {
+                        categoryMatches = characters;
+                        found = true;
+                    } else {
+                        // 개별 문자에서 검색어 찾기
+                        categoryMatches = characters.filter(char => 
+                            char.includes(term) || 
+                            categoryName.toLowerCase().includes(term)
+                        );
+                        if (categoryMatches.length > 0) found = true;
+                    }
+                    
+                    // 매칭된 결과가 있으면 표시
+                    if (categoryMatches.length > 0) {
+                        // 카테고리 구분선
+                        const divider = document.createElement('div');
+                        divider.className = 'category-divider';
+                        divider.textContent = categoryName;
+                        grid.appendChild(divider);
+
+                        // 매칭된 문자들을 버튼으로 생성
+                        categoryMatches.forEach(char => {
+                            const item = document.createElement('button');
+                            item.className = 'character-item';
+                            item.textContent = char;
+                            item.title = `${char} - ${categoryName}`;
+                            item.addEventListener('click', () => copyToClipboard(char));
+                            grid.appendChild(item);
+                        });
+                    }
+                });
+            }
+            
+            // 검색 결과가 없으면 안내 메시지 표시
+            if (!found) {
+                grid.innerHTML = '<div class="category-divider">검색 결과가 없습니다</div>';
+            }
+        }
+
+        /* ========================================
+           클립보드 및 알림 관련 함수들
+        ======================================== */
+        
+        /**
+         * 텍스트를 클립보드에 복사하는 함수
+         * @param {string} text - 복사할 텍스트
+         * - 최신 브라우저의 Clipboard API 사용
+         * - 지원하지 않는 경우 fallback 방식 사용
+         */
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('복사되었습니다!');
+            }).catch(err => {
+                // 구형 브라우저를 위한 fallback 방식
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('복사되었습니다!');
+            });
+        }
+
+        /**
+         * 출력 영역의 텍스트를 복사하는 함수
+         * @param {Element} element - 복사할 텍스트가 있는 DOM 요소
+         * - '복사' 버튼 텍스트는 제외하고 복사
+         */
+        function copyText(element) {
+            let text = element.textContent.replace('복사', '').trim();
+            
+            // 결합문자 출력창의 경우 공백을 제거하여 실제 결합문자로 복사
+            if (element.id === 'combiningOutput') {
+                text = text.replace(/ /g, '');
+            }
+            
+            copyToClipboard(text);
+        }
+
+        /**
+         * 화면에 알림 메시지를 표시하는 함수
+         * @param {string} message - 표시할 메시지
+         * - 우측 상단에 2초간 알림 표시
+         */
+        function showNotification(message) {
+            const notification = document.getElementById('copyNotification');
+            notification.textContent = `📋 ${message}`;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+
+        /**
+         * UCS-2 기준 바이트 계산 함수
+         * @param {string} text - 계산할 텍스트
+         * @returns {number} - UCS-2 기준 바이트 수
+         */
+        function calculateUCS2Bytes(text) {
+            let bytes = 0;
+            for (let i = 0; i < text.length; i++) {
+                const codePoint = text.codePointAt(i);
+                if (codePoint <= 0xFFFF) {
+                    bytes += 2; // BMP: 2바이트
+                } else {
+                    bytes += 4; // 비BMP: 4바이트
+                    i++; // 서로게이트 페어는 2개 문자를 건너뛰어야 함
+                }
+            }
+            return bytes;
+        }
+
+        /**
+         * 한글 입력란 글자수/바이트 카운터 업데이트 함수
+         */
+        function updateKoreanInputCounter() {
+            const input = document.getElementById('koreanInput').value;
+            const counter = document.getElementById('koreanInputCounter');
+            const ucs2Bytes = calculateUCS2Bytes(input);
+            
+            counter.textContent = `${input.length}/70(${ucs2Bytes}/140B)`;
+            
+            // 140바이트 초과 시 경고 색상
+            if (ucs2Bytes > 140) {
+                counter.style.background = '#f8d7da';
+                counter.style.color = '#721c24';
+            } else if (ucs2Bytes > 112) { // 80% 초과 시 경고
+                counter.style.background = '#fff3cd';
+                counter.style.color = '#856404';
+            } else {
+                counter.style.background = '#f8f9fa';
+                counter.style.color = '#666';
+            }
+        }
+
+        /**
+         * 한글을 자음과 모음으로 분리하는 함수
+         * - 완성형 한글을 초성, 중성, 종성으로 분해
+         * - 유니코드 한글 자모 영역 사용
+         */
+        function separateKorean() {
+            const input = document.getElementById('koreanInput').value;
+            const output = document.getElementById('koreanOutput');
+            const outputText = document.getElementById('koreanOutputText');
+            const outputCounter = document.getElementById('koreanOutputCounter');
+            
+            if (!input.trim()) {
+                outputCounter.textContent = '0/70(0/140B)';
+                outputText.innerHTML = '';
+                return;
+            }
+            
+            let result = '';
+            
+            for (let i = 0; i < input.length; i++) {
+                const char = input[i];
+                const code = char.charCodeAt(0);
+                
+                if (code >= 0xAC00 && code <= 0xD7A3) {
+                    const decomposed = decomposeHangul(char);
+                    result += decomposed;
+                } else {
+                    result += char;
+                }
+            }
+            
+            // NFD 형식으로 정규화하여 결합문자가 분리되어 보이도록 함
+            const normalizedResult = result.normalize('NFD');
+            
+            // 한글 자모/완성형에만 스마트하게 ZWSP 삽입
+            const separatedResult = insertSmartZWSP(normalizedResult);
+            
+            // 자모 분리 결과를 편집 가능한 영역에 표시
+            outputText.innerHTML = separatedResult;
+            
+            // 바이트 수 업데이트
+            updateOutputCounter();
+            
+            // 편집 이벤트 리스너 추가
+            outputText.addEventListener('input', updateOutputCounter);
+            outputText.addEventListener('keyup', updateOutputCounter);
+            outputText.addEventListener('paste', updateOutputCounter);
+        }
+
+        /**
+         * 출력 영역의 바이트 카운터를 업데이트하는 함수
+         * - Zero-Width Space (U+200B)는 카운팅에서 제외
+         */
+        function updateOutputCounter() {
+            const outputText = document.getElementById('koreanOutputText');
+            const outputCounter = document.getElementById('koreanOutputCounter');
+            
+            if (outputText) {
+                const text = outputText.textContent || outputText.innerText;
+                // Zero-Width Space (U+200B) 제거
+                const cleanText = text.replace(/\u200B/g, '');
+                const charCount = cleanText.length;
+                const ucs2Bytes = calculateUCS2Bytes(cleanText);
+                outputCounter.textContent = `${charCount}/70(${ucs2Bytes}/140B)`;
+                
+                // 140바이트 초과 시 경고 색상
+                if (ucs2Bytes > 140) {
+                    outputCounter.style.background = '#f8d7da';
+                    outputCounter.style.color = '#721c24';
+                } else if (ucs2Bytes > 112) { // 80% 초과 시 경고
+                    outputCounter.style.background = '#fff3cd';
+                    outputCounter.style.color = '#856404';
+                } else {
+                    outputCounter.style.background = '#f8f9fa';
+                    outputCounter.style.color = '#666';
+                }
+            }
+        }
+
+        /**
+         * 개별 한글 문자를 자모로 분해하는 함수
+         * @param {string} char - 분해할 한글 문자
+         * @returns {string} - 분해된 자모 문자열
+         * - 유니코드 한글 완성형을 초성, 중성, 종성으로 분리
+         */
+        function decomposeHangul(char) {
+            const code = char.charCodeAt(0);
+            const base = code - 0xAC00;
+            
+            const choIndex = Math.floor(base / 588);
+            const jungIndex = Math.floor((base % 588) / 28);
+            const jongIndex = base % 28;
+            
+            let result = '';
+            
+            const choUnicode = 0x1100 + choIndex;
+            result += String.fromCharCode(choUnicode);
+            
+            const jungUnicode = 0x1161 + jungIndex;
+            result += String.fromCharCode(jungUnicode);
+            
+            if (jongIndex > 0) {
+                const jongUnicode = 0x11A7 + jongIndex;
+                result += String.fromCharCode(jongUnicode);
+            }
+            
+            return result;
+        }
+
+        /* ========================================
+           스마트 ZWSP 삽입 함수
+        ======================================== */
+        
+        /**
+         * 한글 자모/완성형에만 ZWSP를 스마트하게 삽입하는 함수
+         * @param {string} text - 처리할 텍스트
+         * @returns {string} - ZWSP가 삽입된 텍스트
+         */
+        function insertSmartZWSP(text) {
+            const result = [];
+            
+            for (let i = 0; i < text.length; i++) {
+                const current = text[i];
+                const next = text[i + 1];
+                
+                result.push(current);
+                
+                // 다음 문자가 없으면 종료
+                if (!next) break;
+                
+                const currentCode = current.charCodeAt(0);
+                const nextCode = next.charCodeAt(0);
+                
+                // 현재 문자가 한글 자모/완성형인지 확인
+                const isCurrentHangul = (
+                    (currentCode >= 0x1100 && currentCode <= 0x11FF) || // 한글 자모
+                    (currentCode >= 0xAC00 && currentCode <= 0xD7A3)    // 완성형 한글
+                );
+                
+                // 다음 문자가 한글 자모/완성형인지 확인
+                const isNextHangul = (
+                    (nextCode >= 0x1100 && nextCode <= 0x11FF) || // 한글 자모
+                    (nextCode >= 0xAC00 && nextCode <= 0xD7A3)    // 완성형 한글
+                );
+                
+                // 다음 문자가 삽입 금지 대상인지 확인
+                const isNextForbidden = (
+                    (nextCode >= 0x41 && nextCode <= 0x5A) ||     // A-Z
+                    (nextCode >= 0x61 && nextCode <= 0x7A) ||     // a-z
+                    (nextCode >= 0x30 && nextCode <= 0x39) ||     // 0-9
+                    (nextCode >= 0x1F000) ||                      // 이모지
+                    (nextCode === 0x20) ||                        // 공백
+                    (nextCode === 0x09) ||                        // 탭
+                    (nextCode === 0x0A) ||                        // 줄바꿈
+                    (nextCode === 0x0D)                           // 캐리지 리턴
+                );
+                
+                // ZWSP 삽입 조건 확인
+                if (isCurrentHangul && isNextHangul && !isNextForbidden) {
+                    // 현재가 완성형이고 다음이 자모인 경우
+                    if ((currentCode >= 0xAC00 && currentCode <= 0xD7A3) && 
+                        (nextCode >= 0x1100 && nextCode <= 0x11FF)) {
+                        result.push('\u200B');
+                    }
+                    // 현재가 자모이고 다음이 완성형인 경우
+                    else if ((currentCode >= 0x1100 && currentCode <= 0x11FF) && 
+                             (nextCode >= 0xAC00 && nextCode <= 0xD7A3)) {
+                        result.push('\u200B');
+                    }
+                    // 현재가 자모이고 다음이 자모인 경우
+                    else if ((currentCode >= 0x1100 && currentCode <= 0x11FF) && 
+                             (nextCode >= 0x1100 && nextCode <= 0x11FF)) {
+                        result.push('\u200B');
+                    }
+                }
+            }
+            
+            return result.join('');
+        }
+
+        /* ========================================
+           유니코드 검증 도구 함수들
+        ======================================== */
+
+        /**
+         * 유니코드 검증 입력란 글자수/바이트 카운터 업데이트 함수
+         */
+        function updateUnicodeVerifyInputCounter() {
+            const input = document.getElementById('unicodeVerifyInput').value;
+            const counter = document.getElementById('unicodeVerifyInputCounter');
+            const ucs2Bytes = calculateUCS2Bytes(input);
+            
+            counter.textContent = `${input.length}/70(${ucs2Bytes}/140B)`;
+            
+            // 140바이트 초과 시 경고 색상
+            if (ucs2Bytes > 140) {
+                counter.style.background = '#f8d7da';
+                counter.style.color = '#721c24';
+            } else if (ucs2Bytes > 112) { // 80% 초과 시 경고
+                counter.style.background = '#fff3cd';
+                counter.style.color = '#856404';
+            } else {
+                counter.style.background = '#f8f9fa';
+                counter.style.color = '#666';
+            }
+        }
+
+        /**
+         * 유니코드 검증 함수
+         * - 입력된 텍스트의 유니코드 구성을 Zero-Width Space로 분리하여 표시
+         * - 변환하지 않고 순수하게 검증만 수행
+         */
+        function verifyUnicode() {
+            const input = document.getElementById('unicodeVerifyInput').value;
+            const outputText = document.getElementById('unicodeVerifyOutputText');
+            const outputCounter = document.getElementById('unicodeVerifyOutputCounter');
+            
+            if (!input.trim()) {
+                outputCounter.textContent = '0/70(0/140B)';
+                outputText.innerHTML = '';
+                return;
+            }
+            
+            // 변환하지 않고 원본 텍스트를 그대로 사용
+            // 한글 자모/완성형에만 스마트하게 ZWSP 삽입
+            const separatedResult = insertSmartZWSP(input);
+            
+            // 검증 결과를 편집 가능한 영역에 표시
+            outputText.innerHTML = separatedResult;
+            
+            // 바이트 수 업데이트
+            updateUnicodeVerifyOutputCounter();
+            
+            // 편집 이벤트 리스너 추가
+            outputText.addEventListener('input', updateUnicodeVerifyOutputCounter);
+            outputText.addEventListener('keyup', updateUnicodeVerifyOutputCounter);
+            outputText.addEventListener('paste', updateUnicodeVerifyOutputCounter);
+        }
+
+        /**
+         * 유니코드 검증 출력 영역의 바이트 카운터를 업데이트하는 함수
+         * - Zero-Width Space (U+200B)는 카운팅에서 제외
+         */
+        function updateUnicodeVerifyOutputCounter() {
+            const outputText = document.getElementById('unicodeVerifyOutputText');
+            const outputCounter = document.getElementById('unicodeVerifyOutputCounter');
+            
+            if (outputText) {
+                const text = outputText.textContent || outputText.innerText;
+                // Zero-Width Space (U+200B) 제거
+                const cleanText = text.replace(/\u200B/g, '');
+                const charCount = cleanText.length;
+                const ucs2Bytes = calculateUCS2Bytes(cleanText);
+                outputCounter.textContent = `${charCount}/70(${ucs2Bytes}/140B)`;
+                
+                // 140바이트 초과 시 경고 색상
+                if (ucs2Bytes > 140) {
+                    outputCounter.style.background = '#f8d7da';
+                    outputCounter.style.color = '#721c24';
+                } else if (ucs2Bytes > 112) { // 80% 초과 시 경고
+                    outputCounter.style.background = '#fff3cd';
+                    outputCounter.style.color = '#856404';
+                } else {
+                    outputCounter.style.background = '#f8f9fa';
+                    outputCounter.style.color = '#666';
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
