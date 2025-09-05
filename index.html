@@ -480,6 +480,56 @@
             background: #a8a8a8;
         }
 
+        /* 폰트 변환 섹션 스타일 */
+        .font-preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .font-preview-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .font-preview-item:hover {
+            border-color: #90caf9;
+            background: #f0f8ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(144, 202, 249, 0.3);
+        }
+
+        .font-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .font-preview {
+            font-size: 18px;
+            color: #333;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        #fontInput:focus {
+            border-color: #90caf9;
+            box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.1);
+        }
+
+        #fontConvertBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(144, 202, 249, 0.4);
+        }
+
         /* 모바일 반응형 CSS */
         @media (max-width: 768px) {
             body {
@@ -548,6 +598,14 @@
             #koreanOutputText, #unicodeVerifyOutputText {
                 height: 120px !important;
             }
+            
+            .font-preview-item {
+                padding: 12px;
+            }
+            
+            .font-preview {
+                font-size: 16px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -599,6 +657,14 @@
                 font-size: 12px;
                 padding: 10px 15px;
             }
+            
+            .font-preview-item {
+                padding: 10px;
+            }
+            
+            .font-preview {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -613,6 +679,7 @@
             <div class="tab-container">
                 <button class="tab active" data-category="emoji">😀<br>이모티콘</button>
                 <button class="tab" data-category="symbols">◉<br>기호</button>
+                <button class="tab" data-category="fontConverter">🔤<br>폰트변환</button>
                 <button class="tab" data-category="unicodeVerify">🔍<br>변환검증하기</button>
             </div>
             
@@ -620,6 +687,44 @@
             <div class="content-area">
                 <div class="character-grid" id="characterGrid">
                     <!-- 문자들이 여기에 동적으로 추가됩니다 -->
+                </div>
+                
+                <!-- 폰트 변환 섹션 -->
+                <div class="font-converter-section" id="fontConverterSection" style="display: none; padding: 20px; height: 100%; overflow-y: auto;">
+                    <div class="input-group" style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">✏️ 변환할 텍스트 입력</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="fontInput" placeholder="영어와 숫자를 입력하세요..." style="flex: 1; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 14px; outline: none;" />
+                            <button id="fontConvertBtn" style="padding: 12px 20px; background: linear-gradient(135deg, #90caf9 0%, #f48fb1 50%, #ce93d8 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">변환</button>
+                        </div>
+                    </div>
+                    
+                    <div class="font-preview-container">
+                        <div class="font-preview-item" data-font="bold-serif">
+                            <div class="font-label">Bold Serif</div>
+                            <div class="font-preview" id="preview-bold-serif">A B C a b c 1 2 3</div>
+                        </div>
+                        
+                        <div class="font-preview-item" data-font="sans-serif">
+                            <div class="font-label">Sans-Serif Regular</div>
+                            <div class="font-preview" id="preview-sans-serif">A B C a b c 1 2 3</div>
+                        </div>
+                        
+                        <div class="font-preview-item" data-font="sans-serif-bold">
+                            <div class="font-label">Sans-Serif Bold</div>
+                            <div class="font-preview" id="preview-sans-serif-bold">A B C a b c 1 2 3</div>
+                        </div>
+                        
+                        <div class="font-preview-item" data-font="monospace">
+                            <div class="font-label">Monospace</div>
+                            <div class="font-preview" id="preview-monospace">A B C a b c 1 2 3</div>
+                        </div>
+                        
+                        <div class="font-preview-item" data-font="double-struck">
+                            <div class="font-label">Double-Struck</div>
+                            <div class="font-preview" id="preview-double-struck">A B C a b c 1 2 3</div>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
@@ -814,6 +919,62 @@
             }
         };
 
+        /* ========================================
+           폰트 변환 매핑 - 유니코드 폰트 스타일
+        ======================================== */
+        const fontMappings = {
+            'bold-serif': {
+                // Mathematical Bold 영역
+                'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉',
+                'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
+                'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
+                'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
+                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
+                'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳',
+                '0': '𝟎', '1': '𝟏', '2': '𝟐', '3': '𝟑', '4': '𝟒', '5': '𝟓', '6': '𝟔', '7': '𝟕', '8': '𝟖', '9': '𝟗'
+            },
+            'sans-serif': {
+                // Mathematical Sans-Serif 영역
+                'A': '𝖠', 'B': '𝖡', 'C': '𝖢', 'D': '𝖣', 'E': '𝖤', 'F': '𝖥', 'G': '𝖦', 'H': '𝖧', 'I': '𝖨', 'J': '𝖩',
+                'K': '𝖪', 'L': '𝖫', 'M': '𝖬', 'N': '𝖭', 'O': '𝖮', 'P': '𝖯', 'Q': '𝖰', 'R': '𝖱', 'S': '𝖲', 'T': '𝖳',
+                'U': '𝖴', 'V': '𝖵', 'W': '𝖶', 'X': '𝖷', 'Y': '𝖸', 'Z': '𝖹',
+                'a': '𝖺', 'b': '𝖻', 'c': '𝖼', 'd': '𝖽', 'e': '𝖾', 'f': '𝖿', 'g': '𝗀', 'h': '𝗁', 'i': '𝗂', 'j': '𝗃',
+                'k': '𝗄', 'l': '𝗅', 'm': '𝗆', 'n': '𝗇', 'o': '𝗈', 'p': '𝗉', 'q': '𝗊', 'r': '𝗋', 's': '𝗌', 't': '𝗍',
+                'u': '𝗎', 'v': '𝗏', 'w': '𝗐', 'x': '𝗑', 'y': '𝗒', 'z': '𝗓',
+                '0': '𝟢', '1': '𝟣', '2': '𝟤', '3': '𝟥', '4': '𝟦', '5': '𝟧', '6': '𝟨', '7': '𝟩', '8': '𝟪', '9': '𝟫'
+            },
+            'sans-serif-bold': {
+                // Mathematical Sans-Serif Bold 영역
+                'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 'I': '𝗜', 'J': '𝗝',
+                'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧',
+                'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭',
+                'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 'i': '𝗶', 'j': '𝗷',
+                'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁',
+                'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇',
+                '0': '𝟬', '1': '𝟭', '2': '𝟮', '3': '𝟯', '4': '𝟰', '5': '𝟱', '6': '𝟲', '7': '𝟳', '8': '𝟴', '9': '𝟵'
+            },
+            'monospace': {
+                // Mathematical Monospace 영역
+                'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹',
+                'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃',
+                'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉',
+                'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓',
+                'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝',
+                'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
+                '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿'
+            },
+            'double-struck': {
+                // Mathematical Double-Struck 영역
+                'A': '𝔸', 'B': '𝔹', 'C': 'ℂ', 'D': '𝔻', 'E': '𝔼', 'F': '𝔽', 'G': '𝔾', 'H': 'ℍ', 'I': '𝕀', 'J': '𝕁',
+                'K': '𝕂', 'L': '𝕃', 'M': '𝕄', 'N': 'ℕ', 'O': '𝕆', 'P': 'ℙ', 'Q': 'ℚ', 'R': 'ℝ', 'S': '𝕊', 'T': '𝕋',
+                'U': '𝕌', 'V': '𝕍', 'W': '𝕎', 'X': '𝕏', 'Y': '𝕐', 'Z': 'ℤ',
+                'a': '𝕒', 'b': '𝕓', 'c': '𝕔', 'd': '𝕕', 'e': '𝕖', 'f': '𝕗', 'g': '𝕘', 'h': '𝕙', 'i': '𝕚', 'j': '𝕛',
+                'k': '𝕜', 'l': '𝕝', 'm': '𝕞', 'n': '𝕟', 'o': '𝕠', 'p': '𝕡', 'q': '𝕢', 'r': '𝕣', 's': '𝕤', 't': '𝕥',
+                'u': '𝕦', 'v': '𝕧', 'w': '𝕨', 'x': '𝕩', 'y': '𝕪', 'z': '𝕫',
+                '0': '𝟘', '1': '𝟙', '2': '𝟚', '3': '𝟛', '4': '𝟜', '5': '𝟝', '6': '𝟞', '7': '𝟟', '8': '𝟠', '9': '𝟡'
+            }
+        };
+
 
         /* ========================================
            애플리케이션 초기화 - DOM 로드 완료 후 실행
@@ -832,6 +993,7 @@
             setupCategoryTabs();    // 문자 카테고리 탭 설정
             setupToolButtons();     // 도구 버튼들 이벤트 설정
             renderCharacters();     // 초기 문자 렌더링
+            resetFontPreviews();    // 폰트 미리보기 초기화
         }
 
         /* ========================================
@@ -888,6 +1050,24 @@
 
             // 유니코드 검증 입력란 바이트 카운터 이벤트
             document.getElementById('unicodeVerifyInput').addEventListener('input', updateUnicodeVerifyInputCounter);
+
+            // 폰트 변환 도구 이벤트
+            document.getElementById('fontConvertBtn').addEventListener('click', convertFonts);
+            document.getElementById('fontInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    convertFonts();
+                }
+            });
+
+            // 폰트 미리보기 클릭 이벤트 (복사)
+            document.querySelectorAll('.font-preview-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const preview = this.querySelector('.font-preview');
+                    if (preview) {
+                        copyToClipboard(preview.textContent);
+                    }
+                });
+            });
         }
 
         /* ========================================
@@ -906,13 +1086,22 @@
             document.querySelectorAll('.character-picker .tab').forEach(tab => tab.classList.remove('active'));
             tabElement.classList.add('active');
             
-            // 유니코드 검증 탭인 경우 우측 패널 전환
-            if (category === 'unicodeVerify') {
-                document.getElementById('koreanPanel').style.display = 'none';
+            // 모든 섹션 숨기기
+            document.getElementById('characterGrid').style.display = 'none';
+            document.getElementById('fontConverterSection').style.display = 'none';
+            document.getElementById('koreanPanel').style.display = 'none';
+            document.getElementById('unicodeVerifyPanel').style.display = 'none';
+            
+            // 카테고리별 섹션 표시
+            if (category === 'fontConverter') {
+                document.getElementById('fontConverterSection').style.display = 'block';
+                document.getElementById('koreanPanel').style.display = 'flex';
+            } else if (category === 'unicodeVerify') {
+                document.getElementById('characterGrid').style.display = 'block';
                 document.getElementById('unicodeVerifyPanel').style.display = 'flex';
             } else {
+                document.getElementById('characterGrid').style.display = 'block';
                 document.getElementById('koreanPanel').style.display = 'flex';
-                document.getElementById('unicodeVerifyPanel').style.display = 'none';
                 // 선택된 카테고리의 문자들을 다시 렌더링
                 renderCharacters();
             }
@@ -1383,6 +1572,64 @@
                     outputCounter.style.color = '#666';
                 }
             }
+        }
+
+        /* ========================================
+           폰트 변환 함수들
+        ======================================== */
+
+        /**
+         * 텍스트를 지정된 폰트 스타일로 변환하는 함수
+         * @param {string} text - 변환할 텍스트
+         * @param {string} fontType - 폰트 타입 (bold-serif, sans-serif, etc.)
+         * @returns {string} - 변환된 텍스트
+         */
+        function convertTextToFont(text, fontType) {
+            const mapping = fontMappings[fontType];
+            if (!mapping) return text;
+            
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                result += mapping[char] || char; // 매핑이 없으면 원본 문자 유지
+            }
+            return result;
+        }
+
+        /**
+         * 모든 폰트 스타일로 변환하여 미리보기 업데이트
+         */
+        function convertFonts() {
+            const input = document.getElementById('fontInput').value;
+            
+            if (!input.trim()) {
+                // 입력이 없으면 기본 예시로 복원
+                resetFontPreviews();
+                return;
+            }
+            
+            // 각 폰트 스타일별로 변환하여 표시
+            Object.keys(fontMappings).forEach(fontType => {
+                const previewElement = document.getElementById(`preview-${fontType}`);
+                if (previewElement) {
+                    const convertedText = convertTextToFont(input, fontType);
+                    previewElement.textContent = convertedText;
+                }
+            });
+        }
+
+        /**
+         * 폰트 미리보기를 기본 예시로 복원
+         */
+        function resetFontPreviews() {
+            const defaultText = 'A B C a b c 1 2 3';
+            Object.keys(fontMappings).forEach(fontType => {
+                const previewElement = document.getElementById(`preview-${fontType}`);
+                if (previewElement) {
+                    const convertedText = convertTextToFont(defaultText, fontType);
+                    previewElement.textContent = convertedText;
+                }
+            });
         }
 
     </script>
