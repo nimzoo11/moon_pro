@@ -535,9 +535,17 @@
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 20px;
             margin: 20px;
+            padding: 40px 20px;
+            height: 450px;
+            max-height: calc(100vh - 200px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border: 2px solid rgba(144, 202, 249, 0.2);
             animation: fadeInUp 0.6s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
         }
 
         .guide-content {
@@ -657,6 +665,8 @@
             .verification-guide {
                 margin: 15px;
                 padding: 30px 15px;
+                height: 350px;
+                max-height: calc(60vh - 100px);
             }
             
             .guide-icon {
@@ -736,6 +746,8 @@
             .verification-guide {
                 margin: 10px;
                 padding: 25px 10px;
+                height: 280px;
+                max-height: calc(55vh - 80px);
             }
             
             .guide-icon {
@@ -820,7 +832,7 @@
                 </div>
                 
                 <!-- 변환검증 탭 안내 메시지 -->
-                <div class="verification-guide" id="verificationGuide" style="display: none; padding: 40px 20px; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
+                <div class="verification-guide" id="verificationGuide" style="display: none;">
                     <div class="guide-content">
                         <div class="guide-icon" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.7;">🔍</div>
                         <h3 style="color: #666; font-size: 1.2rem; margin-bottom: 15px; font-weight: 600;">변환 검증 모드</h3>
