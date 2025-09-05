@@ -24,6 +24,8 @@
             justify-content: center;
             padding: 20px;
             animation: backgroundShift 10s ease-in-out infinite alternate;
+            margin: 0;
+            box-sizing: border-box;
         }
 
         @keyframes backgroundShift {
@@ -37,6 +39,9 @@
             gap: 20px;
             max-width: 1400px;
             width: 100%;
+            margin: 0 auto;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         .character-picker {
@@ -590,12 +595,17 @@
             body {
                 padding: 10px;
                 align-items: flex-start;
+                justify-content: center;
             }
             
             .main-container {
                 flex-direction: column;
                 gap: 15px;
                 max-width: 100%;
+                width: 100%;
+                margin: 0 auto;
+                justify-content: center;
+                align-items: center;
             }
             
             .character-picker {
@@ -686,6 +696,14 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            
+            .main-container {
+                gap: 12px;
+            }
+            
             .character-picker {
                 height: 55vh;
             }
@@ -866,7 +884,7 @@
                 <button class="btn" id="koreanBtn">변환하기</button>
                 <div class="input-group">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <label>🔮 변환 결과</label>
+                        <label><br>🔮 변환 결과</label>
                         <div id="koreanOutputCounter" style="background: #f8f9fa; padding: 4px 8px; border-radius: 12px; font-size: 12px; color: #666; border: 1px solid #e9ecef;">0/70(0/140B)</div>
                     </div>
                     <div style="position: relative;">
@@ -894,7 +912,7 @@
                 <button class="btn" id="unicodeVerifyBtn">🔍 검증하기</button>
                 <div class="input-group">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <label>🔍 유니코드 구성 검증 결과</label>
+                        <label><br>🔍 유니코드 구성 검증 결과</label>
                         <div id="unicodeVerifyOutputCounter" style="background: #f8f9fa; padding: 4px 8px; border-radius: 12px; font-size: 12px; color: #666; border: 1px solid #e9ecef;">0/70(0/140B)</div>
                     </div>
                     <div style="position: relative;">
