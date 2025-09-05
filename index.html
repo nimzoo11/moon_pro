@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎨 Universal Character & Symbol Picker</title>
+    <title>Moon_Pro</title>
     <!-- Google Fonts - 전 세계 문자 지원 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -479,6 +479,127 @@
         .character-grid::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
         }
+
+        /* 모바일 반응형 CSS */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .main-container {
+                flex-direction: column;
+                gap: 15px;
+                max-width: 100%;
+            }
+            
+            .character-picker {
+                width: 100%;
+                height: 60vh;
+                order: 2; /* 아래로 이동 */
+            }
+            
+            .tools-panel {
+                width: 100%;
+                height: 35vh;
+                order: 1; /* 위로 이동 */
+            }
+            
+            .tab-container {
+                overflow-x: auto;
+                scrollbar-width: thin;
+            }
+            
+            .tab {
+                min-width: 70px;
+                font-size: 10px;
+                padding: 10px 8px;
+            }
+            
+            .character-grid {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+                gap: 8px;
+                padding: 10px;
+            }
+            
+            .character-item {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            
+            .search-container input {
+                font-size: 16px; /* iOS 줌 방지 */
+            }
+            
+            .header {
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            .tool-content {
+                padding: 15px;
+            }
+            
+            .input-group textarea {
+                height: 120px !important;
+            }
+            
+            #koreanOutputText, #unicodeVerifyOutputText {
+                height: 120px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .character-picker {
+                height: 55vh;
+            }
+            
+            .tools-panel {
+                height: 40vh;
+            }
+            
+            .character-grid {
+                grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+                gap: 6px;
+            }
+            
+            .character-item {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .tab {
+                min-width: 60px;
+                font-size: 9px;
+                padding: 8px 6px;
+            }
+            
+            .header {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .tool-content {
+                padding: 12px;
+            }
+            
+            .input-group textarea {
+                height: 100px !important;
+            }
+            
+            #koreanOutputText, #unicodeVerifyOutputText {
+                height: 100px !important;
+            }
+            
+            .copy-notification {
+                top: 20px;
+                right: 20px;
+                font-size: 12px;
+                padding: 10px 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -596,16 +717,17 @@
                 ],
                 '🌟 활동과 스포츠': [
                     '⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍',
-                    '🏏', '🪃', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛼', '🛷', '⛸️', '🥌'
+                    '🏏', '🪃', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛼', '🛷', '⛸️', '🥌',
+                    '🏄', '🏖️', '⛷️'
                 ],
                 '🎭 오브젝트와 기호': [
                     '🎨', '🎭', '🎪', '🎫', '🎟️', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🥇', '🥈', '🥉', '🏆', '🏅',
                     '🎖️', '🏵️', '🎗️', '🎪', '🤹', '🎙️', '📻', '🔑', '👗', '👙', '👘'
                 ],
                 '📝 기타 이모지': [
-                    '🍗', '🍔', '🍕', '🚗', '🚕', '🚙', '⭕️', '❌', '✅', '❎', '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣',
-                    '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟', '▶️', '◀️', '🔼', '🔽', '➕', '➖', '➗', '✖️', '♾️', '🙆‍♀️', '🙆‍♂️',
-                    '🙋‍♀️', '🙋‍♂️', '🙇‍♀️', '🙇‍♂️', '🤦‍♀️', '🤦‍♂️', '🤷‍♀️', '🤷‍♂️', '🤷‍♀️', '🤷‍♂️', '🤷‍♀️', '🤷‍♂️'
+                    '🍗', '🍔', '🍕', '🚗', '🚕', '🚙', '⭕️', '❌', '✅', '❎', '🆗', '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣',
+                    '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟', '▶️', '◀️', '🔼', '🔽', '📝', '➕', '➖', '➗', '✖️', '♾️',
+                    '🙆‍♀️', '🙆‍♂️', '🙋‍♀️', '🙋‍♂️', '🙇‍♀️', '🙇‍♂️', '🤦‍♀️', '🤦‍♂️', '🤷‍♀️', '🤷‍♂️', '🤷‍♀️', '🤷‍♂️', '🤷‍♀️', '🤷‍♂️'
                 ]
             },
             symbols: {
