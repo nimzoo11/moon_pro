@@ -530,6 +530,53 @@
             box-shadow: 0 4px 12px rgba(144, 202, 249, 0.4);
         }
 
+        /* 변환검증 안내 메시지 스타일 */
+        .verification-guide {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(144, 202, 249, 0.2);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .guide-content {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .guide-icon {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
         /* 모바일 반응형 CSS */
         @media (max-width: 768px) {
             body {
@@ -606,6 +653,26 @@
             .font-preview {
                 font-size: 16px;
             }
+            
+            .verification-guide {
+                margin: 15px;
+                padding: 30px 15px;
+            }
+            
+            .guide-icon {
+                font-size: 3rem;
+                margin-bottom: 15px;
+            }
+            
+            .guide-content h3 {
+                font-size: 1.1rem;
+                margin-bottom: 12px;
+            }
+            
+            .guide-content p {
+                font-size: 0.9rem;
+                max-width: 250px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -665,6 +732,31 @@
             .font-preview {
                 font-size: 14px;
             }
+            
+            .verification-guide {
+                margin: 10px;
+                padding: 25px 10px;
+            }
+            
+            .guide-icon {
+                font-size: 2.5rem;
+                margin-bottom: 12px;
+            }
+            
+            .guide-content h3 {
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+            
+            .guide-content p {
+                font-size: 0.85rem;
+                max-width: 200px;
+            }
+            
+            .guide-decoration {
+                margin-top: 20px;
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -723,6 +815,21 @@
                         <div class="font-preview-item" data-font="double-struck">
                             <div class="font-label">Double-Struck</div>
                             <div class="font-preview" id="preview-double-struck">A B C a b c 1 2 3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 변환검증 탭 안내 메시지 -->
+                <div class="verification-guide" id="verificationGuide" style="display: none; padding: 40px 20px; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
+                    <div class="guide-content">
+                        <div class="guide-icon" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.7;">🔍</div>
+                        <h3 style="color: #666; font-size: 1.2rem; margin-bottom: 15px; font-weight: 600;">변환 검증 모드</h3>
+                        <p style="color: #888; font-size: 1rem; line-height: 1.6; max-width: 300px; margin: 0 auto;">
+                            변환하기로 돌아가기 위해서는<br>
+                            상단에 다른 메뉴를 선택해주세요
+                        </p>
+                        <div class="guide-decoration" style="margin-top: 25px; font-size: 1.5rem; opacity: 0.5;">
+                            ✨ 🎨 ✨
                         </div>
                     </div>
                 </div>
@@ -844,77 +951,37 @@
                     '★', '☆', '✦', '✧', '✩', '✪', '✫', '✬', '✭', '✮', '✯', '✰', '✱', '✲', '✳', '✴',
                     '✵', '✶', '✷', '✸', '✹', '✺', '✻', '✼', '✽', '✾', '✿', '❀', '❁', '❂', '❃', '❇'
                 ],
-                '( 기호': [
-                    '(', '（', '❨', '❪', '︵', '⟮', '⦅'
+                '🔤 괄호 기호': [
+                    '(', ')', '（', '）', '❨', '❩', '❪', '❫', '︵', '︶', '⟮', '⟯', '⦅', '⦆',
+                    '{', '}', '｛', '｝', '❴', '❵', '﹛', '﹜', '⦃', '⦄',
+                    '[', ']', '［', '］', '❲', '❳', '⟦', '⟧', '⦋', '⦌',
+                    '<', '>', '＜', '＞', '❮', '❯', '‹', '›', '≺', '≻', '⟨', '⟩', '〈', '〉'
                 ],
-                ') 기호': [
-                    ')', '）', '❩', '❫', '︶', '⟯', '⦆'
+                '🔢 수학 기호': [
+                    '+', '＋', '➕', '✚', '⊕', '⊞', '±', '∓',
+                    '-', '－', '➖', '—', '‐', '–', '⊖', '∸',
+                    '*', '＊', '✱', '✳', '✹', '✽', '❋', '⨀', '×', '⨯',
+                    '÷', '∕', '∶', '∷', '∼', '≈', '≠', '≡', '≤', '≥', '∞',
+                    '%', '％', '‰', '‱', '℅', '∝', '∴', '∵', '∀', '∃', '∄'
                 ],
-                '{ 기호': [
-                    '{', '｛', '❴', '﹛', '⦃'
+                '❗ 특수 기호': [
+                    '!', '！', '❗', '❕', '‼', '⁉', '¡',
+                    '?', '？', '❓', '❔', '⁇', '¿',
+                    '~', '～', '˜', '∼', '≈', '≋', '≃',
+                    '|', '｜', '❘', '❙', '❚', '‖', '∣', '∥',
+                    '&', '＆', '﹠', '∧', '∨', '⊕', '⊗'
                 ],
-                '} 기호': [
-                    '}', '｝', '❵', '﹜', '⦄'
+                '💰 통화 기호': [
+                    '$', '＄', '₵', '₡', '¢', '£', '€', '¥', '₩', '₪', '₹', '₽', '₨', '₦', '₫', '₴',
+                    '₸', '₼', '₺', '₶', '₷', '₯', '₰', '₱', '₲', '₳', '₵', '₶', '₷', '₸', '₹', '₺'
                 ],
-                '[ 기호': [
-                    '[', '［', '❲', '⟦', '⦋'
-                ],
-                '] 기호': [
-                    ']', '］', '❳', '⟧', '⦌'
-                ],
-                '< 기호': [
-                    '<', '＜', '❮', '‹', '≺'
-                ],
-                '> 기호': [
-                    '>', '＞', '❯', '›', '≻'
-                ],
-                '% 기호': [
-                    '%', '％', '‰', '‱', '℅'
-                ],
-                '+ 기호': [
-                    '+', '＋', '➕', '✚', '⊕', '⊞'
-                ],
-                '- 기호': [
-                    '-', '－', '➖', '—', '‐', '–', '⊖'
-                ],
-                '* 기호': [
-                    '*', '＊', '✱', '✳', '✹', '✽', '❋', '⨀'
-                ],
-                '! 기호': [
-                    '!', '！', '❗', '❕', '‼'
-                ],
-                '? 기호': [
-                    '?', '？', '❓', '❔', '⁇', '⁉'
-                ],
-                '~ 기호': [
-                    '~', '～', '˜', '∼'
-                ],
-                '| 기호': [
-                    '|', '｜', '❘', '❙', '❚', '‖'
-                ],
-                '& 기호': [
-                    '&', '＆', '﹠'
-                ],
-                '. 기호': [
-                    '.', '．', '・', '•', '‧', '⋅'
-                ],
-                ', 기호': [
-                    ',', '，', '、', '‛', '‚'
-                ],
-                ': 기호': [
-                    ':', '：', 'ː'
-                ],
-                '; 기호': [
-                    ';', '；', '﹔'
-                ],
-                '@ 기호': [
-                    '@', '＠', '﹫'
-                ],
-                '# 기호': [
-                    '#', '＃', '⌗'
-                ],
-                '$ 기호': [
-                    '$', '＄', '₵', '₡'
+                '📝 문장 기호': [
+                    '.', '．', '・', '•', '‧', '⋅', '∘', '◦',
+                    ',', '，', '、', '‛', '‚', '‹', '›', '«', '»',
+                    ':', '：', 'ː', '∶', '∷', '⁚', '⁛',
+                    ';', '；', '﹔', '⁏', '؍', '؎',
+                    '@', '＠', '﹫', '⁎', '⁕', '⁜',
+                    '#', '＃', '⌗', '♯', '♮', '♭'
                 ]
             }
         };
@@ -994,6 +1061,18 @@
             setupToolButtons();     // 도구 버튼들 이벤트 설정
             renderCharacters();     // 초기 문자 렌더링
             resetFontPreviews();    // 폰트 미리보기 초기화
+            
+            // 윈도우 리사이즈 시 그리드 재계산
+            window.addEventListener('resize', () => {
+                setTimeout(() => {
+                    const grid = document.getElementById('characterGrid');
+                    if (grid && grid.style.display !== 'none') {
+                        grid.style.display = 'none';
+                        grid.offsetHeight; // 강제 리플로우
+                        grid.style.display = 'grid';
+                    }
+                }, 100);
+            });
         }
 
         /* ========================================
@@ -1089,6 +1168,7 @@
             // 모든 섹션 숨기기
             document.getElementById('characterGrid').style.display = 'none';
             document.getElementById('fontConverterSection').style.display = 'none';
+            document.getElementById('verificationGuide').style.display = 'none';
             document.getElementById('koreanPanel').style.display = 'none';
             document.getElementById('unicodeVerifyPanel').style.display = 'none';
             
@@ -1097,13 +1177,23 @@
                 document.getElementById('fontConverterSection').style.display = 'block';
                 document.getElementById('koreanPanel').style.display = 'flex';
             } else if (category === 'unicodeVerify') {
-                document.getElementById('characterGrid').style.display = 'block';
+                document.getElementById('verificationGuide').style.display = 'flex';
                 document.getElementById('unicodeVerifyPanel').style.display = 'flex';
             } else {
                 document.getElementById('characterGrid').style.display = 'block';
                 document.getElementById('koreanPanel').style.display = 'flex';
                 // 선택된 카테고리의 문자들을 다시 렌더링
                 renderCharacters();
+                
+                // 탭 전환 후 그리드 레이아웃 강제 재계산
+                setTimeout(() => {
+                    const grid = document.getElementById('characterGrid');
+                    if (grid && grid.style.display !== 'none') {
+                        grid.style.display = 'none';
+                        grid.offsetHeight; // 강제 리플로우
+                        grid.style.display = 'grid';
+                    }
+                }, 50);
             }
         }
 
@@ -1141,6 +1231,18 @@
                     });
                 });
             }
+            
+            // 그리드 레이아웃 강제 재계산
+            setTimeout(() => {
+                const grid = document.getElementById('characterGrid');
+                if (grid) {
+                    // 그리드 스타일을 임시로 변경했다가 복원하여 레이아웃 재계산 강제
+                    const originalDisplay = grid.style.display;
+                    grid.style.display = 'none';
+                    grid.offsetHeight; // 강제 리플로우
+                    grid.style.display = originalDisplay || 'grid';
+                }
+            }, 10);
         }
 
         /**
